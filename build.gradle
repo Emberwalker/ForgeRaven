@@ -40,7 +40,21 @@ repositories {
     }
 }
 
+apply plugin: 'scala'
 apply plugin: 'forge'
+
+//================================================
+// Dependencies and setup
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    shade 'net.kencochrane.raven:raven:5.0'
+    shade 'net.kencochrane.raven:raven-log4j2:5.0'
+}
 
 //================================================
 // Jar data
@@ -108,8 +122,15 @@ task javadocJar(type: Jar, dependsOn:javadoc) {
     from javadoc.destinationDir
 }
 
-// Merge Jenkins and Git manifests to form final manifest in final release jar
 jar {
+    // Grab deps for shading
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+
+    // Merge Jenkins and Git manifests to form final manifest in final release jar
     manifest {
         from jenkinsManifest, gitManifest
     }
