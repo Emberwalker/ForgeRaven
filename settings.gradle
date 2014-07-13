@@ -1,0 +1,6 @@
+rootProject.name = "ForgeRaven"
+gradle.ext {
+    fr_mod_version = '0.0.0'
+    fr_mc_ver = '1.7.1'
+    fr_forge_ver = '10.13.0.1180'
+}
